@@ -1,0 +1,113 @@
+@model EcommerceApp.Models.Entities.Order
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-4">
+    <h1>Finalizar Compra</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações de Envio</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Orders" asp-action="ProcessPayment" method="post">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="ShippingName" class="form-label">Nome Completo</label>
+                                <input asp-for="ShippingName" class="form-control" required />
+                                <span asp-validation-for="ShippingName" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="ShippingAddress" class="form-label">Endereço</label>
+                                <input asp-for="ShippingAddress" class="form-control" required />
+                                <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="ShippingCity" class="form-label">Cidade</label>
+                                <input asp-for="ShippingCity" class="form-control" required />
+                                <span asp-validation-for="ShippingCity" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="ShippingZipCode" class="form-label">CEP</label>
+                                <input asp-for="ShippingZipCode" class="form-control" required />
+                                <span asp-validation-for="ShippingZipCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h5 class="mb-3">Informações de Pagamento</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cardName" class="form-label">Nome no Cartão</label>
+                                <input type="text" class="form-control" id="cardName" required />
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="cardNumber" class="form-label">Número do Cartão</label>
+                                <input type="text" class="form-control" id="cardNumber" required />
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="expMonth" class="form-label">Mês de Expiração</label>
+                                <input type="text" class="form-control" id="expMonth" required />
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="expYear" class="form-label">Ano de Expiração</label>
+                                <input type="text" class="form-control" id="expYear" required />
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" required />
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <button class="btn btn-primary btn-lg w-100" type="submit">Finalizar Pedido</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Resumo do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in ViewBag.CartItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between lh-sm">
+                                <div>
+                                    <h6 class="my-0">@item.Product.Name</h6>
+                                    <small class="text-muted">Quantidade: @item.Quantity</small>
+                                </div>
+                                <span class="text-muted">R$ @((item.Product.Price * item.Quantity).ToString("N2"))</span>
+                            </li>
+                        }
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total</span>
+                            <strong>R$ @ViewBag.Total.ToString("N2")</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

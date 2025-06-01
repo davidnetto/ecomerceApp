@@ -1,0 +1,51 @@
+@model EcommerceApp.Models.Entities.Product
+
+@{
+    ViewData["Title"] = "Excluir Produto";
+}
+
+<div class="container mt-4">
+    <h1>Excluir Produto</h1>
+    
+    <div class="alert alert-danger">
+        <h3>Tem certeza que deseja excluir este produto?</h3>
+        <p>Esta ação não poderá ser desfeita.</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name" style="max-height: 300px;">
+            }
+            else
+            {
+                <img src="/images/no-image.png" class="img-fluid rounded" alt="Sem imagem" style="max-height: 300px;">
+            }
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Nome</dt>
+                <dd class="col-sm-8">@Model.Name</dd>
+                
+                <dt class="col-sm-4">Descrição</dt>
+                <dd class="col-sm-8">@Model.Description</dd>
+                
+                <dt class="col-sm-4">Preço</dt>
+                <dd class="col-sm-8">R$ @Model.Price.ToString("N2")</dd>
+                
+                <dt class="col-sm-4">Estoque</dt>
+                <dd class="col-sm-8">@Model.StockQuantity</dd>
+                
+                <dt class="col-sm-4">Categoria</dt>
+                <dd class="col-sm-8">@Model.Category?.Name</dd>
+            </dl>
+            
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

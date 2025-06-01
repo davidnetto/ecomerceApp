@@ -1,0 +1,64 @@
+@model EcommerceApp.Models.Entities.Category
+
+@{
+    ViewData["Title"] = "Detalhes da Categoria";
+}
+
+<div class="container mt-4">
+    <h1>Detalhes da Categoria</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>@Model.Name</h3>
+        </div>
+        <div class="card-body">
+            <p>@Model.Description</p>
+            <p><strong>Data de Criação:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            @if (Model.UpdatedAt.HasValue)
+            {
+                <p><strong>Última Atualização:</strong> @Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")</p>
+            }
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+            <a asp-action="Index" class="btn btn-secondary">Voltar para Lista</a>
+        </div>
+    </div>
+
+    <h2>Produtos nesta Categoria</h2>
+
+    @if (Model.Products != null && Model.Products.Any())
+    {
+        <div class="row">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <img src="/images/no-image.png" class="card-img-top" alt="Sem imagem" style="height: 200px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@product.Description</p>
+                            <p class="card-text"><strong>Preço:</strong> R$ @product.Price.ToString("N2")</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">Ver Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Não há produtos cadastrados nesta categoria.
+        </div>
+    }
+</div>

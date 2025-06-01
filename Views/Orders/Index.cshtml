@@ -1,0 +1,65 @@
+@model IEnumerable<EcommerceApp.Models.Entities.Order>
+
+@{
+    ViewData["Title"] = "Meus Pedidos";
+}
+
+<div class="container mt-4">
+    <h1>Meus Pedidos</h1>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info mt-4">
+            <h4>Você ainda não realizou nenhum pedido</h4>
+            <p>Explore nossos produtos e faça seu primeiro pedido.</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Ver Produtos</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mt-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Número do Pedido</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>#@item.Id.ToString("D6")</td>
+                            <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                @if (item.Status == "Pendente")
+                                {
+                                    <span class="badge bg-warning text-dark">@item.Status</span>
+                                }
+                                else if (item.Status == "Pago")
+                                {
+                                    <span class="badge bg-success">@item.Status</span>
+                                }
+                                else if (item.Status == "Cancelado")
+                                {
+                                    <span class="badge bg-danger">@item.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">@item.Status</span>
+                                }
+                            </td>
+                            <td>R$ @item.TotalAmount.ToString("N2")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalhes</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

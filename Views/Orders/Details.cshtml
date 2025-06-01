@@ -1,0 +1,154 @@
+@model EcommerceApp.Models.Entities.Order
+
+@{
+    ViewData["Title"] = "Detalhes do Pedido";
+}
+
+<div class="container mt-4">
+    <h1>Detalhes do Pedido #@Model.Id.ToString("D6")</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Número do Pedido</dt>
+                        <dd class="col-sm-8">#@Model.Id.ToString("D6")</dd>
+                        
+                        <dt class="col-sm-4">Data</dt>
+                        <dd class="col-sm-8">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+                        
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Status == "Pendente")
+                            {
+                                <span class="badge bg-warning text-dark">@Model.Status</span>
+                            }
+                            else if (Model.Status == "Pago")
+                            {
+                                <span class="badge bg-success">@Model.Status</span>
+                            }
+                            else if (Model.Status == "Cancelado")
+                            {
+                                <span class="badge bg-danger">@Model.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info">@Model.Status</span>
+                            }
+                        </dd>
+                        
+                        <dt class="col-sm-4">Total</dt>
+                        <dd class="col-sm-8">R$ @Model.TotalAmount.ToString("N2")</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações de Envio</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Nome</dt>
+                        <dd class="col-sm-8">@Model.ShippingName</dd>
+                        
+                        <dt class="col-sm-4">Endereço</dt>
+                        <dd class="col-sm-8">@Model.ShippingAddress</dd>
+                        
+                        <dt class="col-sm-4">Cidade</dt>
+                        <dd class="col-sm-8">@Model.ShippingCity</dd>
+                        
+                        <dt class="col-sm-4">CEP</dt>
+                        <dd class="col-sm-8">@Model.ShippingZipCode</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Model.PaymentMethod))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Informações de Pagamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">Método</dt>
+                            <dd class="col-sm-8">@Model.PaymentMethod</dd>
+                            
+                            @if (Model.PaymentDate.HasValue)
+                            {
+                                <dt class="col-sm-4">Data</dt>
+                                <dd class="col-sm-8">@Model.PaymentDate.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+                            }
+                            
+                            @if (!string.IsNullOrEmpty(Model.TransactionId))
+                            {
+                                <dt class="col-sm-4">Transação</dt>
+                                <dd class="col-sm-8">@Model.TransactionId</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Itens do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Preço</th>
+                                    <th>Qtd</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                                {
+                                                    <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                                }
+                                                else
+                                                {
+                                                    <img src="/images/no-image.png" alt="Sem imagem" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                                }
+                                                <span>@item.Product.Name</span>
+                                            </div>
+                                        </td>
+                                        <td>R$ @item.UnitPrice.ToString("N2")</td>
+                                        <td>@item.Quantity</td>
+                                        <td>R$ @item.Subtotal.ToString("N2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                    <td><strong>R$ @Model.TotalAmount.ToString("N2")</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Voltar para Meus Pedidos</a>
+    </div>
+</div>

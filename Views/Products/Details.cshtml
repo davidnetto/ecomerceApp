@@ -1,0 +1,53 @@
+@model EcommerceApp.Models.Entities.Product
+
+@{
+    ViewData["Title"] = "Detalhes do Produto";
+}
+
+<div class="container mt-4">
+    <h1>Detalhes do Produto</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name">
+            }
+            else
+            {
+                <img src="/images/no-image.png" class="img-fluid rounded" alt="Sem imagem">
+            }
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p class="text-muted">@Model.Category?.Name</p>
+            <hr />
+            <p>@Model.Description</p>
+            <h3 class="text-primary">R$ @Model.Price.ToString("N2")</h3>
+            
+            <div class="mt-4">
+                @if (Model.StockQuantity > 0)
+                {
+                    <span class="badge bg-success mb-3">Em estoque: @Model.StockQuantity unidades</span>
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <div class="input-group mb-3">
+                            <input type="number" name="quantity" class="form-control" value="1" min="1" max="@Model.StockQuantity" />
+                            <button type="submit" class="btn btn-primary">Adicionar ao Carrinho</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <span class="badge bg-danger mb-3">Produto indisponível</span>
+                    <button class="btn btn-secondary" disabled>Produto Esgotado</button>
+                }
+            </div>
+            
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary">Voltar para Lista</a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+            </div>
+        </div>
+    </div>
+</div>
